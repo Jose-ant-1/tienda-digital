@@ -13,36 +13,36 @@
     la base de datos por ahora va así
     -- create database empresa;
     -- use empresa;
+
     CREATE TABLE usuarios (
-    id 			INT PRIMARY KEY AUTO_INCREMENT,
-    nombre 		VARCHAR(100)	not null,
-    rol 		VARCHAR(30) 	not null,
-    password 	VARCHAR(256)	not null
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) not null,
+    rol VARCHAR(30) not null,
+    password VARCHAR(256) not null
     );
 
     CREATE TABLE productos (
-    id 		INT PRIMARY KEY AUTO_INCREMENT,
-    nombre 	VARCHAR(150)	not null,
-    precio 	DECIMAL(10,2)	not null
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(150) not null,
+    precio DECIMAL(10,2) not null
     );
 
     CREATE TABLE pedidos (
-    id 			INT PRIMARY KEY AUTO_INCREMENT,
-    usuario_id 	INT 			not null,
-    importe		DECIMAL(10,2) 	not null,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id INT not null,
+    importe DECIMAL(10,2) not null,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
     );
 
     CREATE TABLE detalle_pedidos (
-    id 				INT PRIMARY KEY AUTO_INCREMENT,
-    pedido_id 		INT 			not null,
-    producto_id 	INT 			not null,
-    cantidad 		INT 			not null,
-    precio_unitario DECIMAL(10,2) 	not null,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    pedido_id INT not null,
+    producto_id INT not null,
+    cantidad INT not null,
+    precio_unitario DECIMAL(10,2) not null,
     FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
     FOREIGN KEY (producto_id) REFERENCES productos(id)
     );
-
 
 </p>
 </body>
