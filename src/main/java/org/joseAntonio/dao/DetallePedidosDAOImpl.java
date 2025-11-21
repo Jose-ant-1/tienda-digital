@@ -1,9 +1,8 @@
 package org.joseAntonio.dao;
 
 import org.joseAntonio.model.DetallePedidos;
-import org.joseAntonio.model.Pedido;
-
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,23 +40,114 @@ public class DetallePedidosDAOImpl extends AbstractDAOImpl implements DetallePed
     }
 
     @Override
-    public List<Pedido> getAll() {
+    public List<DetallePedidos> getAll() {
 
-        return List.of();
+        Connection conn = null;
+        Statement s = null;
+        ResultSet rs = null;
+
+        List<DetallePedidos> detallePedidos = new ArrayList<>();
+
+        try {
+            conn = connectDB();
+            s = conn.createStatement();
+            rs = s.executeQuery("SELECT * FROM detalle_pedidos");
+
+            while (rs.next()) {
+                DetallePedidos detallePedido = new DetallePedidos();
+                int idx = 1;
+                detallePedido.setId(rs.getInt(idx++));
+                detallePedido.setPedidoId(rs.getInt(idx++));
+                detallePedido.setProductoId(rs.getInt(idx++));
+                detallePedido.setCantidad(rs.getInt(idx++));
+                detallePedido.setPrecio(rs.getDouble(idx++));
+                detallePedidos.add(detallePedido);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeDb(conn, s, rs);
+        }
+        return detallePedidos;
     }
 
     @Override
     public Optional<DetallePedidos> find(int id) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = connectDB();
+            ps = conn.prepareStatement("SELECT * FROM detalle_pedidos WHERE id = ?");
+            int idx = 1;
+            ps.setInt(idx++, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                DetallePedidos detallePedido = new DetallePedidos();
+                idx = 1;
+                detallePedido.setId(rs.getInt(idx++));
+                detallePedido.setPedidoId(rs.getInt(idx++));
+                detallePedido.setProductoId(rs.getInt(idx++));
+                detallePedido.setCantidad(rs.getInt(idx++));
+                detallePedido.setPrecio(rs.getDouble(idx++));
+                return Optional.of(detallePedido);
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeDb(conn, ps, rs);
+        }
         return Optional.empty();
     }
 
     @Override
-    public void update(Pedido pedido) {
+    public void update(DetallePedidos detallePedidos) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = connectDB();
+            ps = conn.prepareStatement("UPDATE detalle_pedidos SET pedido_id = ?, producto_id = ?, cantidad = ?, precio_unitario = ? WHERE id = ?");
+            int idx = 1;
+            ps.setInt(idx++, detallePedidos.getPedidoId());
+            ps.setInt(idx++, detallePedidos.getProductoId());
+            ps.setInt(idx++, detallePedidos.getCantidad());
+            ps.setDouble(idx++, detallePedidos.getPrecio());
+            ps.setInt(idx++, detallePedidos.getId());
+            int rows =  ps.executeUpdate();
+            if (rows == 0)
+                System.out.println("UPDATE de detallePedidos con 0 filas actualizadas");
+
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeDb(conn, ps, rs);
+        }
 
     }
 
     @Override
     public void delete(int id) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = connectDB();
+            ps =  conn.prepareStatement("DELETE FROM detalle_pedidos WHERE id = ?");
 
+            int idx = 1;
+            ps.setInt(idx++, id);
+            int rows = ps.executeUpdate();
+            if (rows == 0)
+                System.out.println("DELETE de detallePedidos con 0 filas actualizadas");
+
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeDb(conn, ps, rs);
+        }
     }
 }

@@ -113,7 +113,7 @@ public class PedidoDAOImpl extends AbstractDAOImpl implements PedidoDAO {
 
             int rows = ps.executeUpdate();
             if (rows == 0)
-                System.out.println("UPDATE pedidos con 0 filas insertadas");
+                System.out.println("UPDATE pedidos con 0 filas actualizadas");
 
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -145,7 +145,5 @@ public class PedidoDAOImpl extends AbstractDAOImpl implements PedidoDAO {
         } finally {
             closeDb(conn, ps, rs);
         }
-
-
     }
 }

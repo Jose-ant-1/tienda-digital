@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface DetallePedidosDAO {
     public void create(DetallePedidos detallePedidos);
-    public List<Pedido> getAll();
+    public List<DetallePedidos> getAll();
     public Optional<DetallePedidos> find(int id);
-    public void update(Pedido pedido);
+    public void update(DetallePedidos detallePedido);
     public void delete(int id);
 
 }
